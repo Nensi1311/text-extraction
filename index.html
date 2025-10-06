@@ -40,15 +40,18 @@
       fd.append("file", fileInput.files[0]);
 
       try {
-        const resp = await fetch("/upload", { method: "POST", body: fd });
+        // ✅ Updated fetch URL to match backend route
+        const resp = await fetch("/extract", { method: "POST", body: fd });
         const data = await resp.json();
+
         if (!resp.ok || !data.success) {
-          statusEl.textContent = "Error: " + (data.error || "Unknown error");
+          statusEl.textContent = "Error: " + (data.message || "Unknown error");
           return;
         }
 
-        statusEl.textContent = `Extracted ${data.count} transactions`;
-        const txs = data.transactions || [];
+        const txs = data.data || [];
+        statusEl.textContent = `Extracted ${txs.length} transactions`;
+
         if (txs.length) {
           const keys = Object.keys(txs[0]);
           const table = document.createElement("table");
@@ -72,15 +75,6 @@
           resultsEl.appendChild(table);
         }
 
-        if (data.csvUrl) {
-          const a = document.createElement("a");
-          a.href = data.csvUrl;
-          a.textContent = "Download CSV";
-          a.style.display = "inline-block";
-          a.style.marginTop = "12px";
-          a.download = ""; // let browser decide
-          resultsEl.appendChild(a);
-        }
       } catch (err) {
         console.error(err);
         statusEl.textContent = "Upload failed: " + err.message;
