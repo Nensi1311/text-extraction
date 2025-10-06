@@ -36,7 +36,7 @@ Text:
 `;
 
     const completion = await openai.chat.completions.create({
-      model: "qwen/qwen3-235b-2507", // keep your model or change per your config
+      model: "qwen/qwen3-235b-a22b-2507", // keep your model or change per your config
       messages: [{ role: "user", content: prompt }],
       temperature: 0.2,
     });
