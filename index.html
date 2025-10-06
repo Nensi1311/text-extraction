@@ -2,80 +2,126 @@
 <html>
 <head>
   <meta charset="utf-8" />
-  <title>Upload PDF</title>
+  <title>PDF Extractor</title>
   <style>
-    body { font-family: Arial, sans-serif; padding: 20px; }
-    table { border-collapse: collapse; width: 100%; margin-top: 10px; }
-    th, td { border: 1px solid #ddd; padding: 8px; }
-    th { background: #f4f4f4; text-align: left; }
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      max-width: 800px;
+      margin: auto;
+    }
+
+    input, button {
+      padding: 8px 12px;
+      margin: 5px 0;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      margin-top: 10px;
+      table-layout: fixed; 
+    }
+
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      word-wrap: break-word;
+    }
+
+    th {
+      background: #4CAF50;
+      color: white;
+      text-align: left;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f2f2f2;
+    }
+
+    td:first-child, th:first-child {
+      white-space: nowrap;
+      width: 120px; 
+    }
+
+    #loader {
+      display: none;
+    }
   </style>
 </head>
 <body>
-  <h2>Upload PDF File</h2>
-  <form id="uploadForm">
-    <input type="file" id="fileInput" name="file" accept="application/pdf" />
-    <button type="submit">Upload</button>
-  </form>
+  <h2>Upload PDF</h2>
+  <input type="file" id="fileInput" accept="application/pdf" />
+  <button id="uploadBtn">Upload & Extract</button>
+  <span id="loader">⏳ Processing...</span>
 
-  <div id="status" style="margin-top:12px"></div>
+  <p id="status"></p>
   <div id="results"></div>
 
   <script>
-    const form = document.getElementById("uploadForm");
+    const fileInput = document.getElementById("fileInput");
+    const uploadBtn = document.getElementById("uploadBtn");
+    const loader = document.getElementById("loader");
     const statusEl = document.getElementById("status");
     const resultsEl = document.getElementById("results");
 
-    form.addEventListener("submit", async (e) => {
-      e.preventDefault();
+    uploadBtn.addEventListener("click", async () => {
       resultsEl.innerHTML = "";
-      statusEl.textContent = "Uploading and extracting ...";
-
-      const fileInput = document.getElementById("fileInput");
       if (!fileInput.files.length) {
         statusEl.textContent = "Select a PDF file first.";
         return;
       }
 
+      statusEl.textContent = "";
+      loader.style.display = "inline";
+
       const fd = new FormData();
       fd.append("file", fileInput.files[0]);
 
       try {
-        // ✅ Updated fetch URL to match backend route
         const resp = await fetch("/extract", { method: "POST", body: fd });
         const data = await resp.json();
+        loader.style.display = "none";
 
         if (!resp.ok || !data.success) {
           statusEl.textContent = "Error: " + (data.message || "Unknown error");
           return;
         }
 
-        const txs = data.data || [];
+        const txs = data.transactions || data.data || [];
         statusEl.textContent = `Extracted ${txs.length} transactions`;
 
         if (txs.length) {
           const keys = Object.keys(txs[0]);
-          const table = document.createElement("table");
-          const thead = document.createElement("thead");
-          const headRow = document.createElement("tr");
-          keys.forEach(k => { const th = document.createElement("th"); th.textContent = k; headRow.appendChild(th); });
-          thead.appendChild(headRow);
-          table.appendChild(thead);
-
-          const tbody = document.createElement("tbody");
+          let table = `<table><thead><tr>${keys.map(k => `<th>${k}</th>`).join("")}</tr></thead><tbody>`;
           txs.forEach(tx => {
-            const tr = document.createElement("tr");
-            keys.forEach(k => {
-              const td = document.createElement("td");
-              td.textContent = tx[k] ?? "";
-              tr.appendChild(td);
-            });
-            tbody.appendChild(tr);
+            table += "<tr>" + keys.map(k => `<td>${tx[k] ?? ""}</td>`).join("") + "</tr>";
           });
-          table.appendChild(tbody);
-          resultsEl.appendChild(table);
+          table += "</tbody></table>";
+          resultsEl.innerHTML = table;
+
+          // Create CSV content
+          const csvContent = [
+            keys.join(","), // headers
+            ...txs.map(tx => keys.map(k => `"${(tx[k] ?? "")}"`).join(","))
+          ].join("\n");
+
+          // Create download button
+          const a = document.createElement("a");
+          a.href = "data:text/csv;charset=utf-8," + encodeURIComponent(csvContent);
+          a.download = "extracted_transactions.csv";
+          a.textContent = "Download CSV";
+          a.style.display = "inline-block";
+          a.style.marginTop = "10px";
+          resultsEl.appendChild(a);
         }
 
       } catch (err) {
+        loader.style.display = "none";
         console.error(err);
         statusEl.textContent = "Upload failed: " + err.message;
       }
