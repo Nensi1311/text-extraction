@@ -1,0 +1,31 @@
+{
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "jsonrepair": "^3.13.1",
+    "multer": "^2.0.2",
+    "openai": "^6.1.0",
+    "pdf-parse": "^2.1.7"
+  },
+  "name": "text-extraction",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Nensi1311/text-extraction.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Nensi1311/text-extraction/issues"
+  },
+  "homepage": "https://github.com/Nensi1311/text-extraction#readme"
+}
