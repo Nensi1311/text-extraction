@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Upload PDF</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    table { border-collapse: collapse; width: 100%; margin-top: 10px; }
+    th, td { border: 1px solid #ddd; padding: 8px; }
+    th { background: #f4f4f4; text-align: left; }
+  </style>
+</head>
+<body>
+  <h2>Upload PDF File</h2>
+  <form id="uploadForm">
+    <input type="file" id="fileInput" name="file" accept="application/pdf" />
+    <button type="submit">Upload</button>
+  </form>
+
+  <div id="status" style="margin-top:12px"></div>
+  <div id="results"></div>
+
+  <script>
+    const form = document.getElementById("uploadForm");
+    const statusEl = document.getElementById("status");
+    const resultsEl = document.getElementById("results");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      resultsEl.innerHTML = "";
+      statusEl.textContent = "Uploading and extracting ...";
+
+      const fileInput = document.getElementById("fileInput");
+      if (!fileInput.files.length) {
+        statusEl.textContent = "Select a PDF file first.";
+        return;
+      }
+
+      const fd = new FormData();
+      fd.append("file", fileInput.files[0]);
+
+      try {
+        const resp = await fetch("/upload", { method: "POST", body: fd });
+        const data = await resp.json();
+        if (!resp.ok || !data.success) {
+          statusEl.textContent = "Error: " + (data.error || "Unknown error");
+          return;
+        }
+
+        statusEl.textContent = `Extracted ${data.count} transactions`;
+        const txs = data.transactions || [];
+        if (txs.length) {
+          const keys = Object.keys(txs[0]);
+          const table = document.createElement("table");
+          const thead = document.createElement("thead");
+          const headRow = document.createElement("tr");
+          keys.forEach(k => { const th = document.createElement("th"); th.textContent = k; headRow.appendChild(th); });
+          thead.appendChild(headRow);
+          table.appendChild(thead);
+
+          const tbody = document.createElement("tbody");
+          txs.forEach(tx => {
+            const tr = document.createElement("tr");
+            keys.forEach(k => {
+              const td = document.createElement("td");
+              td.textContent = tx[k] ?? "";
+              tr.appendChild(td);
+            });
+            tbody.appendChild(tr);
+          });
+          table.appendChild(tbody);
+          resultsEl.appendChild(table);
+        }
+
+        if (data.csvUrl) {
+          const a = document.createElement("a");
+          a.href = data.csvUrl;
+          a.textContent = "Download CSV";
+          a.style.display = "inline-block";
+          a.style.marginTop = "12px";
+          a.download = ""; // let browser decide
+          resultsEl.appendChild(a);
+        }
+      } catch (err) {
+        console.error(err);
+        statusEl.textContent = "Upload failed: " + err.message;
+      }
+    });
+  </script>
+</body>
+</html>
