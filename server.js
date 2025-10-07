@@ -43,7 +43,7 @@ app.post("/extract", upload.single("file"), async (req, res) => {
 
     // Call OpenRouter to structure extracted text
     const completion = await openai.chat.completions.create({
-      model: "qwen/qwen3-235b-a22b-2507",
+      model: "google/gemini-2.5-pro",
       messages: [
         {
           role: "system",
