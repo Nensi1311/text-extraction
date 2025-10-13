@@ -1,11 +1,11 @@
-// services/pdfExtractor.js (Updated)
+// services/pdfExtractor.js 
 import OpenAI from "openai";
 import { jsonrepair } from "jsonrepair";
 import dotenv from "dotenv";
 dotenv.config();
 
 const openai = new OpenAI({
-    baseURL: "[https://openrouter.ai/api/v1](https://openrouter.ai/api/v1)",
+    base_url: "https://openrouter.ai/api/v1",
     apiKey: process.env.OPENROUTER_API_KEY,
 });
 
@@ -45,11 +45,11 @@ Your **ONLY** output must be a single, complete, and valid JSON object adhering 
 {
  "transactions": [
  {
- "date": "YYYY-MM-DD",
- "description": "string (merge multi-line text into one clean string)",
- "amount": 123.45, // Numeric float
- "type": "Credit" or "Debit",
- "balance": 5000.75 // Numeric float or null
+ "Date": "DD-MM-YYYY",
+ "Description": "string (merge multi-line text into one clean string)",
+ "Amount": 123.45, // Numeric float
+ "Type": "Credit" or "Debit",
+ "Balance": 5000.75 // Numeric float or null
  }
   ]
 }
@@ -60,7 +60,7 @@ Your **ONLY** output must be a single, complete, and valid JSON object adhering 
 
         const completion = await openai.chat.completions.create({
             // Using a top-tier model for complex reasoning and adherence
-            model: "google/gemini-2.5-pro", 
+            model: "qwen/qwen3-235b-a22b-2507", 
             messages: [{ role: "user", content: prompt }],
             temperature: 0.2,
             response_format: { type: "json_object" } 
@@ -85,8 +85,6 @@ Your **ONLY** output must be a single, complete, and valid JSON object adhering 
 
         const transactions = rawTransactions.map(txn => {
             return {
-                id: txn.id,
-                userId: txn.userId,
                 date: txn.date,
                 description: txn.description,
                 
@@ -94,8 +92,7 @@ Your **ONLY** output must be a single, complete, and valid JSON object adhering 
                 amount: safeParseFloat(txn.amount),
                 balance: safeParseFloat(txn.balance),
                 
-                type: txn.type,
-                category: txn.category,
+                type: txn.type
             };
         }).filter(txn => txn.amount !== null && ['Credit', 'Debit'].includes(txn.type));
 
