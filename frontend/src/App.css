@@ -1,0 +1,101 @@
+body {
+  margin: 0;
+  font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  background: linear-gradient(to bottom right, #f0f4ff, #ffffff);
+  color: #1f2937;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.app-container {
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0px 8px 25px rgba(0, 0, 0, 0.1);
+  padding: 40px;
+  width: 100%;
+  max-width: 600px;
+  text-align: center;
+  transition: transform 0.3s ease;
+}
+
+.app-container:hover {
+  transform: scale(1.01);
+}
+
+h1 {
+  font-size: 2rem;
+  margin-bottom: 10px;
+  color: #1e3a8a;
+}
+
+p {
+  color: #6b7280;
+  margin-bottom: 30px;
+  font-size: 1rem;
+}
+
+.upload-box {
+  border: 2px dashed #93c5fd;
+  border-radius: 15px;
+  padding: 40px;
+  background: #f9fafb;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.upload-box:hover {
+  background: #f3f4f6;
+  border-color: #2563eb;
+}
+
+.upload-box input {
+  display: none;
+}
+
+button {
+  background-color: #2563eb;
+  color: white;
+  border: none;
+  padding: 12px 25px;
+  font-size: 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 20px;
+  transition: background 0.3s ease;
+  width: 100%;
+  max-width: 200px;
+}
+
+button:hover {
+  background-color: #1d4ed8;
+}
+
+.output {
+  margin-top: 30px;
+  text-align: left;
+  background: #f9fafb;
+  padding: 20px;
+  border-radius: 10px;
+  max-height: 300px;
+  overflow-y: auto;
+  font-family: monospace;
+  font-size: 0.9rem;
+  color: #374151;
+  border: 1px solid #e5e7eb;
+}
+
+.csv-link {
+  margin-top: 15px;
+  display: inline-block;
+  text-decoration: none;
+  color: #2563eb;
+  font-weight: 600;
+}
+
+.csv-link:hover {
+  text-decoration: underline;
+}
