@@ -15,7 +15,7 @@ export async function askLLM(messages, model = process.env.OPENROUTER_MODEL, opt
       model,
       messages,
       temperature: options.temperature ?? 0.3,
-      max_tokens: options.max_tokens ?? 1500,
+      max_tokens: options.max_tokens ?? 2000,
       ...options,
     });
 
