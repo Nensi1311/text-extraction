@@ -1,6 +1,6 @@
 # 📄 PDF Transaction Extractor
 
-A full-stack web application that automatically extracts financial transactions from bank statement PDFs using AI-powered text processing. The application processes PDF files, extracts transaction data, and exports the results as CSV files.
+A full-stack web application that automatically extracts financial transactions from bank statement PDFs using AI-powered text processing. The application processes PDF files, extracts transaction data and exports the results as CSV files.
 
 ## ✨ Features
 
@@ -157,17 +157,6 @@ Upload and process a PDF file to extract transactions.
 5. **CSV Generation**: Structured data is exported as CSV
 6. **File Cleanup**: Temporary files are removed
 
-## 🎯 Supported Transaction Types
-
-The application can extract various transaction types including:
-- ATM withdrawals
-- Online transfers (NEFT, RTGS)
-- Cheque payments
-- Cash deposits
-- Fee deductions
-- Interest credits
-- And more...
-
 ## 🔒 Security Features
 
 - Temporary file cleanup after processing
@@ -200,10 +189,6 @@ npm start
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
-## 📝 License
-
-This project is licensed under the ISC License - see the [LICENSE](LICENSE) file for details.
-
 ## 🐛 Troubleshooting
 
 ### Common Issues
@@ -211,20 +196,3 @@ This project is licensed under the ISC License - see the [LICENSE](LICENSE) file
 1. **API Key Error**: Ensure your OpenRouter API key is correctly set in the `.env` file
 2. **PDF Processing Failed**: Check if the PDF is not password-protected and contains readable text
 3. **Build Errors**: Make sure all dependencies are installed and Node.js version is compatible
-
-### Support
-
-For support, please open an issue on the [GitHub repository](https://github.com/Nensi1311/text-extraction/issues).
-
-## 📈 Future Enhancements
-
-- [ ] Support for multiple file formats (Excel, CSV)
-- [ ] Batch processing of multiple PDFs
-- [ ] Advanced filtering and search capabilities
-- [ ] Data visualization and analytics
-- [ ] User authentication and data persistence
-- [ ] API rate limiting and optimization
-
----
-
-**Made with ❤️ by [Nensi](https://github.com/Nensi1311)**
