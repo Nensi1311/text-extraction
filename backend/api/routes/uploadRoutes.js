@@ -3,7 +3,7 @@ import express from "express";
 import multer from "multer";
 import fs from "fs";
 import path from "path";
-import pdf from "../../helpers/pdfParse.js"; // helper you already have
+import pdf from "../../helpers/pdfParse.js"; 
 import { extractTransactionsFromText } from "../../services/pdfExtractor.js";
 
 const router = express.Router();
@@ -15,7 +15,7 @@ router.post("/upload", upload.single("file"), async (req, res) => {
 
     // read uploaded PDF
     const dataBuffer = fs.readFileSync(req.file.path);
-    const pdfData = await pdf(dataBuffer); // uses your helper pdf-parse wrapper
+    const pdfData = await pdf(dataBuffer); 
 
     // extract transactions (returns { success, count, transactions } )
     const extractionResult = await extractTransactionsFromText(pdfData.text || "");
@@ -33,7 +33,7 @@ router.post("/upload", upload.single("file"), async (req, res) => {
     if (!fs.existsSync(downloadsDir)) fs.mkdirSync(downloadsDir);
 
     // Build CSV (simple heuristic: consistent header from common keys)
-    const headers = ["id", "userId", "date", "description", "amount", "type", "category", "balance"];
+    const headers = ["Date", "Description", "Amount", "Type", "Balance"];
     const filename = `transactions_${Date.now()}.csv`;
     const filepath = path.join(downloadsDir, filename);
 
